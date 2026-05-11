@@ -1,0 +1,9 @@
+name: starter
+description: FLKit starter brick
+version: 0.1.0
+
+vars:
+  app_name:
+    type: string
+  use_riverpod:
+    type: boolean
