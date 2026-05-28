@@ -1,0 +1,14 @@
+{
+  "title": "Accueil",
+  "description": "Un onglet simple pour l'experience principale de l'app.",
+  "cards": {
+    "first": {
+      "title": "Feature-first par defaut",
+      "description": "Chaque zone produit a son dossier feature avec presentation, application, data et domain."
+    },
+    "second": {
+      "title": "Pret pour les vrais calls",
+      "description": "Le flow auth est mock maintenant, avec un TODO clair pour l'integration backend."
+    }
+  }
+}

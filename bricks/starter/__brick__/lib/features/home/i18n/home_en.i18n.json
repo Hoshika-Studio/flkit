@@ -1,0 +1,14 @@
+{
+  "title": "Home",
+  "description": "A simple landing tab for the main app experience.",
+  "cards": {
+    "first": {
+      "title": "Feature-first by default",
+      "description": "Each product area gets its own feature folder with presentation, application, data, and domain space."
+    },
+    "second": {
+      "title": "Ready for real calls",
+      "description": "The auth flow is mocked now, with a clear TODO for the backend integration."
+    }
+  }
+}

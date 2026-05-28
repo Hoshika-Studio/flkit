@@ -1,0 +1,13 @@
+{
+  "title": "Settings",
+  "description": "Account, appearance, and app preferences live here.",
+  "account": {
+    "title": "Account",
+    "description": "Connect this section to your real profile API."
+  },
+  "appearance": {
+    "title": "Appearance",
+    "description": "The starter ships with a minimal black and white theme."
+  },
+  "logout": "Log out"
+}

@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "name": "Nom",
+    "email": "Email",
+    "password": "Mot de passe"
+  },
+  "login": {
+    "title": "Bon retour",
+    "subtitle": "Connecte-toi avec le compte mock et branche ton backend quand il est pret.",
+    "action": "Se connecter",
+    "goToRegister": "Creer un compte"
+  },
+  "register": {
+    "title": "Cree ton compte",
+    "subtitle": "Ce flow mock garde l'app runnable pendant que ton API prend forme.",
+    "action": "Creer un compte",
+    "goToLogin": "J'ai deja un compte"
+  },
+  "errors": {
+    "generic": "Une erreur est survenue. Reessaie."
+  }
+}

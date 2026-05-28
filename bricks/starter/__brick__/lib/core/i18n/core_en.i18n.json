@@ -1,0 +1,11 @@
+{
+  "app": {
+    "title": "{{display_name}}"
+  },
+  "navigation": {
+    "home": "Home",
+    "search": "Search",
+    "favorite": "Favorite",
+    "settings": "Settings"
+  }
+}

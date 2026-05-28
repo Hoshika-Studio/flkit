@@ -1,0 +1,6 @@
+namespaces: true
+input_directory: lib
+output_directory: lib/core/i18n/generated
+base_locale: {{base_locale}}
+fallback_strategy: base_locale
+translation_class_visibility: public

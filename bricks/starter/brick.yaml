@@ -5,5 +5,21 @@ version: 0.1.0
 vars:
   app_name:
     type: string
+  package_name:
+    type: string
+  display_name:
+    type: string
+  bundle_id:
+    type: string
   use_riverpod:
+    type: boolean
+  use_dio:
+    type: boolean
+  languages:
+    type: list
+  base_locale:
+    type: string
+  use_en:
+    type: boolean
+  use_fr:
     type: boolean

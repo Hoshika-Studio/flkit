@@ -1,0 +1,6 @@
+{
+  "title": "Recherche",
+  "description": "Un flow de recherche placeholder pret pour ton domaine.",
+  "inputLabel": "Rechercher quelque chose",
+  "emptyState": "Les resultats apparaitront ici."
+}

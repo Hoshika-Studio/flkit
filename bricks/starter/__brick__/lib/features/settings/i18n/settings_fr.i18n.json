@@ -1,0 +1,13 @@
+{
+  "title": "Reglages",
+  "description": "Compte, apparence et preferences d'app vivent ici.",
+  "account": {
+    "title": "Compte",
+    "description": "Connecte cette section a ta vraie API de profil."
+  },
+  "appearance": {
+    "title": "Apparence",
+    "description": "Le starter arrive avec un theme noir et blanc minimal."
+  },
+  "logout": "Se deconnecter"
+}

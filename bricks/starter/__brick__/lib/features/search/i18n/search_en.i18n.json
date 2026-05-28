@@ -1,0 +1,6 @@
+{
+  "title": "Search",
+  "description": "A placeholder search flow ready for your domain.",
+  "inputLabel": "Search something",
+  "emptyState": "Results will appear here."
+}
