@@ -15,6 +15,8 @@ starter architecture that stays easy to grow.
 - GoRouter navigation with onboarding, auth, home, search, favorite, settings.
 - Optional Riverpod Generator setup.
 - Optional Dio API client setup.
+- Envied setup for generated environment variables.
+- Freezed and JSON Serializable dependencies ready for DTOs and models.
 - Simple black and white Theme Tailor theme.
 - Mock async auth flow with TODOs for backend calls.
 
@@ -103,6 +105,7 @@ The generated starter uses this layout:
 lib/
   core/
     i18n/
+    env/
     network/
     router/
     theme/
@@ -128,6 +131,15 @@ Shared translations stay in:
 ```txt
 lib/core/i18n/
 ```
+
+Environment values are generated from `.env` with Envied:
+
+```txt
+.env.example
+lib/core/env/env.dart
+```
+
+FLKit also adds `.env` patterns to the generated `.gitignore`.
 
 ## Roadmap
 

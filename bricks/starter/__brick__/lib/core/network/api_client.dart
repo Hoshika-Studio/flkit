@@ -1,5 +1,6 @@
 {{#use_dio}}
 import 'package:dio/dio.dart';
+import 'package:{{package_name}}/core/env/env.dart';
 {{#use_riverpod}}
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,7 +10,7 @@ part 'api_client.g.dart';
 Dio dio(Ref ref) {
   return Dio(
     BaseOptions(
-      baseUrl: 'https://api.example.com',
+      baseUrl: Env.apiBaseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     ),
@@ -20,7 +21,7 @@ Dio dio(Ref ref) {
 Dio createDio() {
   return Dio(
     BaseOptions(
-      baseUrl: 'https://api.example.com',
+      baseUrl: Env.apiBaseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     ),
