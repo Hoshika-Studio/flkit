@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
@@ -71,7 +72,7 @@ class CreateCommand extends Command<void> {
 
     progress.complete('Flutter project created');
 
-    final brick = Brick.path('bricks/starter');
+    final brick = Brick.path(await _brickPath('starter'));
     final generator = await MasonGenerator.fromBrick(brick);
 
     final packageName = _toPackageName(appName);
@@ -251,6 +252,19 @@ class CreateCommand extends Command<void> {
         .where((part) => part.isNotEmpty)
         .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
         .join(' ');
+  }
+
+  Future<String> _brickPath(String name) async {
+    final packageUri = await Isolate.resolvePackageUri(
+      Uri.parse('package:flkit/flkit.dart'),
+    );
+
+    if (packageUri == null) {
+      throw StateError('Unable to resolve the FLKit package location.');
+    }
+
+    final packageRoot = p.dirname(p.dirname(packageUri.toFilePath()));
+    return p.join(packageRoot, 'bricks', name);
   }
 }
 
