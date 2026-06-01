@@ -1,7 +1,10 @@
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:args/command_runner.dart';
+import 'package:flkit/create/starter_config.dart';
+import 'package:flkit/create/starter_language.dart';
+import 'package:flkit/create/starter_platform.dart';
+import 'package:flkit/templates/template_locator.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 
@@ -46,33 +49,31 @@ class CreateCommand extends Command<void> {
     final platforms = _resolvePlatforms(argResults?['platforms'] as String?);
 
     final config = template == 'starter'
-        ? const _StarterConfig(
+        ? const StarterConfig(
             useRiverpod: true,
             useDio: true,
             languages: StarterLanguage.values,
           )
         : _promptCustomConfig();
 
-    final progress = _logger.progress('Creating Flutter project');
+    final created = await _runStep(
+      message: 'Creating Flutter project',
+      executable: 'flutter',
+      arguments: [
+        'create',
+        appName,
+        '--org',
+        bundleId,
+        '--platforms',
+        platforms.map((platform) => platform.name).join(','),
+      ],
+      failureMessage: 'Flutter create failed',
+      successMessage: 'Flutter project created',
+    );
 
-    final result = await Process.run('flutter', [
-      'create',
-      appName,
-      '--org',
-      bundleId,
-      '--platforms',
-      platforms.map((platform) => platform.name).join(','),
-    ], runInShell: true);
+    if (!created) return;
 
-    if (result.exitCode != 0) {
-      progress.fail('Flutter create failed');
-      _logger.err(result.stderr.toString());
-      return;
-    }
-
-    progress.complete('Flutter project created');
-
-    final brick = Brick.path(await _brickPath('starter'));
+    final brick = Brick.path(await resolveTemplatePath('starter'));
     final generator = await MasonGenerator.fromBrick(brick);
 
     final packageName = _toPackageName(appName);
@@ -81,16 +82,11 @@ class CreateCommand extends Command<void> {
     await generator.generate(
       DirectoryGeneratorTarget(Directory(appName)),
       vars: {
-        'app_name': packageName,
         'package_name': packageName,
         'display_name': _toDisplayName(packageName),
-        'bundle_id': bundleId,
         'use_riverpod': config.useRiverpod,
         'use_dio': config.useDio,
-        'languages': languages.map((language) => language.code).toList(),
         'base_locale': StarterLanguage.en.code,
-        'use_en': languages.contains(StarterLanguage.en),
-        'use_fr': languages.contains(StarterLanguage.fr),
       },
     );
 
@@ -99,42 +95,32 @@ class CreateCommand extends Command<void> {
       selectedLanguages: languages,
     );
 
-    final pubGetProgress = _logger.progress('Installing starter dependencies');
-    final pubGetResult = await Process.run(
-      'flutter',
-      ['pub', 'get'],
+    final dependenciesInstalled = await _runStep(
+      message: 'Installing starter dependencies',
+      executable: 'flutter',
+      arguments: ['pub', 'get'],
       workingDirectory: appName,
-      runInShell: true,
+      failureMessage: 'flutter pub get failed',
+      successMessage: 'Starter dependencies installed',
     );
 
-    if (pubGetResult.exitCode != 0) {
-      pubGetProgress.fail('flutter pub get failed');
-      _logger.err(pubGetResult.stderr.toString());
-      return;
-    }
+    if (!dependenciesInstalled) return;
 
-    pubGetProgress.complete('Starter dependencies installed');
-
-    final slangProgress = _logger.progress('Generating translations');
-    final slangResult = await Process.run(
-      'dart',
-      ['run', 'slang'],
+    final translationsGenerated = await _runStep(
+      message: 'Generating translations',
+      executable: 'dart',
+      arguments: ['run', 'slang'],
       workingDirectory: appName,
-      runInShell: true,
+      failureMessage: 'Slang generation failed',
+      successMessage: 'Translations generated',
     );
 
-    if (slangResult.exitCode != 0) {
-      slangProgress.fail('Slang generation failed');
-      _logger.err(slangResult.stderr.toString());
-      return;
-    }
-
-    slangProgress.complete('Translations generated');
+    if (!translationsGenerated) return;
 
     _logger.success('Done');
   }
 
-  _StarterConfig _promptCustomConfig() {
+  StarterConfig _promptCustomConfig() {
     final languages = _logger.chooseAny<StarterLanguage>(
       'Languages',
       choices: StarterLanguage.values,
@@ -142,7 +128,7 @@ class CreateCommand extends Command<void> {
       display: (language) => language.label,
     );
 
-    return _StarterConfig(
+    return StarterConfig(
       useRiverpod: _logger.confirm(
         'Use Riverpod Generator?',
         defaultValue: true,
@@ -254,86 +240,29 @@ class CreateCommand extends Command<void> {
         .join(' ');
   }
 
-  Future<String> _brickPath(String name) async {
-    final packageUri = await Isolate.resolvePackageUri(
-      Uri.parse('package:flkit/flkit.dart'),
+  Future<bool> _runStep({
+    required String message,
+    required String executable,
+    required List<String> arguments,
+    required String failureMessage,
+    required String successMessage,
+    String? workingDirectory,
+  }) async {
+    final progress = _logger.progress(message);
+    final result = await Process.run(
+      executable,
+      arguments,
+      workingDirectory: workingDirectory,
+      runInShell: true,
     );
 
-    if (packageUri == null) {
-      throw StateError('Unable to resolve the FLKit package location.');
+    if (result.exitCode != 0) {
+      progress.fail(failureMessage);
+      _logger.err(result.stderr.toString());
+      return false;
     }
 
-    final packageRoot = p.dirname(p.dirname(packageUri.toFilePath()));
-    return p.join(packageRoot, 'bricks', name);
+    progress.complete(successMessage);
+    return true;
   }
-}
-
-enum StarterLanguage {
-  en('en', 'English (en)'),
-  fr('fr', 'French (fr)');
-
-  const StarterLanguage(this.code, this.label);
-
-  final String code;
-  final String label;
-}
-
-enum StarterPlatform {
-  android('android'),
-  ios('ios'),
-  web('web'),
-  linux('linux'),
-  macos('macos'),
-  windows('windows');
-
-  const StarterPlatform(this.name);
-
-  final String name;
-
-  static StarterPlatform? fromName(String name) {
-    for (final platform in values) {
-      if (platform.name == name) return platform;
-    }
-
-    return null;
-  }
-}
-
-enum StarterPlatformGroup {
-  mobile('mobile', 'Mobile (Android + iOS)', [
-    StarterPlatform.android,
-    StarterPlatform.ios,
-  ]),
-  desktop('desktop', 'Desktop (Linux + macOS + Windows)', [
-    StarterPlatform.linux,
-    StarterPlatform.macos,
-    StarterPlatform.windows,
-  ]),
-  web('web', 'Web', [StarterPlatform.web]);
-
-  const StarterPlatformGroup(this.name, this.label, this.platforms);
-
-  final String name;
-  final String label;
-  final List<StarterPlatform> platforms;
-
-  static StarterPlatformGroup? fromName(String name) {
-    for (final group in values) {
-      if (group.name == name) return group;
-    }
-
-    return null;
-  }
-}
-
-class _StarterConfig {
-  const _StarterConfig({
-    required this.useRiverpod,
-    required this.useDio,
-    required this.languages,
-  });
-
-  final bool useRiverpod;
-  final bool useDio;
-  final List<StarterLanguage> languages;
 }
