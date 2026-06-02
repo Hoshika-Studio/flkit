@@ -34,6 +34,12 @@ After FLKit is published on pub.dev:
 dart pub global activate flkit
 ```
 
+Check the installed version:
+
+```sh
+flkit --version
+```
+
 ## Usage
 
 Create a project with the starter template:

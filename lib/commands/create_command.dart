@@ -119,7 +119,13 @@ class CreateCommand extends Command<void> {
 
     if (!translationsGenerated) return;
 
-    _logger.success('Done');
+    _logger
+      ..success('Done')
+      ..info('')
+      ..info('Next steps:')
+      ..info('  cd $appName')
+      ..info('  dart run build_runner build --delete-conflicting-outputs')
+      ..info('  flutter run');
   }
 
   StarterConfig _promptCustomConfig() {
