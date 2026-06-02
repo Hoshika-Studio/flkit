@@ -2,6 +2,14 @@ name: flkit
 description: A CLI tool to generate Flutter projects.
 version: 0.1.0
 repository: https://github.com/Hoshika-Studio/flkit
+issue_tracker: https://github.com/Hoshika-Studio/flkit/issues
+
+topics:
+  - flutter
+  - cli
+  - mason
+  - starter
+  - template
 
 environment:
   sdk: ^3.11.5
