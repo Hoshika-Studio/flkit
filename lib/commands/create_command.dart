@@ -124,6 +124,7 @@ class CreateCommand extends Command<void> {
       ..info('')
       ..info('Next steps:')
       ..info('  cd $appName')
+      ..info('  dart run slang')
       ..info('  dart run build_runner build --delete-conflicting-outputs')
       ..info('  flutter run');
   }
