@@ -1,5 +1,5 @@
 import 'package:args/command_runner.dart';
-import 'package:flkit/flkit_cli.dart';
+import 'package:hoshika_flkit/flkit_cli.dart';
 import 'package:test/test.dart';
 
 void main() {

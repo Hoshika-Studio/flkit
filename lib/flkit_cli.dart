@@ -1,6 +1,6 @@
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
-import 'package:flkit/commands/create_command.dart';
+import 'package:hoshika_flkit/commands/create_command.dart';
 
 const flkitVersion = '0.1.0';
 

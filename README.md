@@ -31,7 +31,7 @@ dart pub global activate --source path .
 After FLKit is published on pub.dev:
 
 ```sh
-dart pub global activate flkit
+dart pub global activate hoshika_flkit
 ```
 
 Check the installed version:

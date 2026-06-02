@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:flkit/create/starter_config.dart';
-import 'package:flkit/create/starter_language.dart';
-import 'package:flkit/create/starter_platform.dart';
-import 'package:flkit/templates/template_locator.dart';
+import 'package:hoshika_flkit/create/starter_config.dart';
+import 'package:hoshika_flkit/create/starter_language.dart';
+import 'package:hoshika_flkit/create/starter_platform.dart';
+import 'package:hoshika_flkit/templates/template_locator.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 

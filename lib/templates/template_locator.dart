@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 
 Future<String> resolveTemplatePath(String name) async {
   final packageUri = await Isolate.resolvePackageUri(
-    Uri.parse('package:flkit/flkit.dart'),
+    Uri.parse('package:hoshika_flkit/flkit.dart'),
   );
 
   if (packageUri == null) {
