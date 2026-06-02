@@ -1,6 +1,6 @@
 name: hoshika_flkit
 description: A CLI tool to generate Flutter projects.
-version: 0.1.0
+version: 0.2.0
 repository: https://github.com/Hoshika-Studio/flkit
 issue_tracker: https://github.com/Hoshika-Studio/flkit/issues
 
@@ -19,6 +19,7 @@ dependencies:
   mason: ^0.1.2
   mason_logger: ^0.3.5
   path: ^1.9.1
+  yaml: ^3.1.3
 
 dev_dependencies:
   lints: ^6.0.0

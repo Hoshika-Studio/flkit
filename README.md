@@ -12,6 +12,7 @@ The package is published on pub.dev as `hoshika_flkit`, and it installs the
 
 - Feature-first Flutter starter.
 - Starter and custom creation flows.
+- Feature generation with `flkit add feature <name>`.
 - Mobile, desktop, and web platform selection.
 - Slang i18n with English and French starter translations.
 - Feature-local translation files.
@@ -85,6 +86,33 @@ Flutter platforms are also supported:
 
 ```sh
 flkit create sample_app --template=starter --platforms=android,ios,web
+```
+
+## Add A Feature
+
+Inside a FLKit-generated project, add a feature folder:
+
+```sh
+flkit add feature notifications
+```
+
+This creates:
+
+```txt
+lib/features/notifications/
+  application/
+  data/
+  domain/
+  i18n/
+  presentation/
+```
+
+It also creates a starter screen and i18n files for the detected project languages.
+
+Use explicit languages for scripts or AI agents:
+
+```sh
+flkit add feature notifications --languages=en,fr
 ```
 
 ## Generated Project

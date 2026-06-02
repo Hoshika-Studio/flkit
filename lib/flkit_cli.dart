@@ -1,8 +1,9 @@
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
+import 'package:hoshika_flkit/commands/add_command.dart';
 import 'package:hoshika_flkit/commands/create_command.dart';
 
-const flkitVersion = '0.1.0';
+const flkitVersion = '0.2.0';
 
 class FlkitCommandRunner extends CommandRunner<void> {
   FlkitCommandRunner({void Function(String message)? printLine})
@@ -15,6 +16,7 @@ class FlkitCommandRunner extends CommandRunner<void> {
       help: 'Print the FLKit version.',
     );
 
+    addCommand(AddCommand());
     addCommand(CreateCommand());
   }
 

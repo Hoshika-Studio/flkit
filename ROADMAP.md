@@ -6,11 +6,9 @@ humans or AI agents to understand.
 
 ## v0.2
 
-- Add `flkit add feature <name>`.
-- Generate feature folders with presentation, application, domain, and i18n
-  files.
-- Add non-interactive flags for feature generation.
 - Improve generated README content inside starter projects.
+- Add route insertion helpers for generated features.
+- Add more feature presets.
 
 ## Future Ideas
 

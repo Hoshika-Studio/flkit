@@ -1,3 +1,11 @@
+## 0.2.0
+
+- Add `flkit add feature <name>`.
+- Generate feature-first folders with presentation, application, data, domain,
+  and i18n files.
+- Add language detection and `--languages` for feature generation.
+- Add optional Slang generation after adding a feature.
+
 ## 0.1.0
 
 - Initial FLKit CLI release.

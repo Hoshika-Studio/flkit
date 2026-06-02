@@ -51,5 +51,22 @@ void main() {
         throwsA(isA<UsageException>()),
       );
     });
+
+    test('accepts add feature options', () {
+      final runner = FlkitCommandRunner();
+
+      final results = runner.parse([
+        'add',
+        'feature',
+        'user_profile',
+        '--languages=en,fr',
+        '--no-run-slang',
+      ]);
+
+      expect(results.command?.name, 'add');
+      expect(results.command?.command?.name, 'feature');
+      expect(results.command?.command?['languages'], 'en,fr');
+      expect(results.command?.command?['run-slang'], false);
+    });
   });
 }
