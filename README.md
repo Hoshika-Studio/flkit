@@ -1,17 +1,20 @@
 # FLKit
 
-FLKit is a small CLI for generating Flutter apps with a clean, feature-first
-starter.
+FLKit is a small CLI for creating Flutter apps with a clean, feature-first
+starter. It removes the repetitive setup work around routing, translations,
+theme tokens, environment variables, auth screens, navigation, and the first
+project structure.
 
-The goal is to remove the boring setup work when starting a new Flutter repo:
-routing, translations, theme tokens, basic auth screens, navigation, and a
-starter architecture that stays easy to grow.
+The package is published on pub.dev as `hoshika_flkit`, and it installs the
+`flkit` command.
 
 ## Features
 
 - Feature-first Flutter starter.
+- Starter and custom creation flows.
 - Mobile, desktop, and web platform selection.
 - Slang i18n with English and French starter translations.
+- Feature-local translation files.
 - GoRouter navigation with onboarding, auth, home, search, favorite, settings.
 - Optional Riverpod Generator setup.
 - Optional Dio API client setup.
@@ -22,19 +25,13 @@ starter architecture that stays easy to grow.
 
 ## Install
 
-For local development:
-
-```sh
-dart pub global activate --source path .
-```
-
-After FLKit is published on pub.dev:
+Activate FLKit from pub.dev:
 
 ```sh
 dart pub global activate hoshika_flkit
 ```
 
-Check the installed version:
+Check that the command is available:
 
 ```sh
 flkit --version
@@ -42,15 +39,15 @@ flkit --version
 
 ## Usage
 
-Create a project with the starter template:
+Create a Flutter app with the default starter:
 
 ```sh
 flkit create sample_app --template=starter
 ```
 
-The starter template asks for a bundle id and uses the default FLKit stack.
+The starter template only asks for a bundle id and uses the default FLKit stack.
 
-Create a project with the custom flow:
+Create a Flutter app with the custom flow:
 
 ```sh
 flkit create sample_app
@@ -64,7 +61,7 @@ The custom flow asks for:
 - Riverpod Generator
 - Dio
 
-## Non-interactive Usage
+## Non-Interactive Usage
 
 You can pass flags for scripts, CI, or AI agents:
 
@@ -99,10 +96,13 @@ flutter pub get
 dart run slang
 ```
 
-For Riverpod and Theme Tailor code generation, run this in the generated project:
+Then run the remaining code generation commands in the generated project:
 
 ```sh
-dart run build_runner build
+cd sample_app
+dart run slang
+dart run build_runner build --delete-conflicting-outputs
+flutter run
 ```
 
 The generated starter uses this layout:
@@ -110,8 +110,8 @@ The generated starter uses this layout:
 ```txt
 lib/
   core/
-    i18n/
     env/
+    i18n/
     network/
     router/
     theme/
@@ -149,10 +149,7 @@ FLKit also adds `.env` patterns to the generated `.gitignore`.
 
 ## Roadmap
 
-- `flkit add feature <name>` to generate feature folders and i18n files.
-- More starter templates.
-- More language presets.
-- JSON/non-interactive output for AI and automation workflows.
+See [ROADMAP.md](ROADMAP.md).
 
 ## License
 
