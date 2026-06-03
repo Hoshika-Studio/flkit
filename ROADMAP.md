@@ -4,10 +4,10 @@ FLKit is starting as a focused Flutter project generator. The first goal is to
 make new repositories quick to create, predictable to maintain, and easy for
 humans or AI agents to understand.
 
-## v0.2
+## Next
 
 - Improve generated README content inside starter projects.
-- Add route insertion helpers for generated features.
+- Add optional router updates when generating a feature.
 - Add more feature presets.
 
 ## Future Ideas

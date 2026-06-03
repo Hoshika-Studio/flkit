@@ -98,6 +98,14 @@ class CreateCommand extends Command<void> {
       projectDirectory: Directory(appName),
       selectedLanguages: languages,
     );
+    writeFlkitManifest(
+      projectDirectory: Directory(appName),
+      packageName: packageName,
+      useRiverpod: config.useRiverpod,
+      useDio: config.useDio,
+      languages: languages,
+      baseLocale: StarterLanguage.en,
+    );
     ensureEnvironmentFiles(Directory(appName));
     ensureEnvFilesAreIgnored(Directory(appName));
 

@@ -70,3 +70,45 @@ void ensureEnvFilesAreIgnored(Directory projectDirectory) {
 
   gitignore.writeAsStringSync(buffer.toString());
 }
+
+void writeFlkitManifest({
+  required Directory projectDirectory,
+  required String packageName,
+  required bool useRiverpod,
+  required bool useDio,
+  required List<StarterLanguage> languages,
+  required StarterLanguage baseLocale,
+}) {
+  final supportedLocales = languages
+      .map((language) => '      - ${language.code}')
+      .join('\n');
+  final manifest =
+      '''
+flkit:
+  version: 0.2.0
+  template: starter
+  architecture: feature_first
+  package: $packageName
+  tools:
+    router: go_router
+    i18n: slang
+    theme: theme_tailor
+    env: envied
+    state_management: ${useRiverpod ? 'riverpod_generator' : 'none'}
+    network: ${useDio ? 'dio' : 'none'}
+    models:
+      - freezed
+      - json_serializable
+  locales:
+    base: ${baseLocale.code}
+    supported:
+$supportedLocales
+  conventions:
+    features_directory: lib/features
+    core_directory: lib/core
+    feature_i18n: true
+    generated_i18n_directory: lib/core/i18n/generated
+''';
+
+  File(p.join(projectDirectory.path, 'flkit.yaml')).writeAsStringSync(manifest);
+}

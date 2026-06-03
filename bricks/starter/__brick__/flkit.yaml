@@ -1,0 +1,25 @@
+flkit:
+  version: 0.2.0
+  template: starter
+  architecture: feature_first
+  package: {{package_name}}
+  tools:
+    router: go_router
+    i18n: slang
+    theme: theme_tailor
+    env: envied
+    state_management: {{#use_riverpod}}riverpod_generator{{/use_riverpod}}{{^use_riverpod}}none{{/use_riverpod}}
+    network: {{#use_dio}}dio{{/use_dio}}{{^use_dio}}none{{/use_dio}}
+    models:
+      - freezed
+      - json_serializable
+  locales:
+    base: {{base_locale}}
+    supported:
+      - en
+      - fr
+  conventions:
+    features_directory: lib/features
+    core_directory: lib/core
+    feature_i18n: true
+    generated_i18n_directory: lib/core/i18n/generated

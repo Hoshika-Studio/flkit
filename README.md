@@ -13,6 +13,7 @@ The package is published on pub.dev as `hoshika_flkit`, and it installs the
 - Feature-first Flutter starter.
 - Starter and custom creation flows.
 - Feature generation with `flkit add feature <name>`.
+- Agent-readable starter with `AGENTS.md` and `flkit.yaml`.
 - Mobile, desktop, and web platform selection.
 - Slang i18n with English and French starter translations.
 - Feature-local translation files.
@@ -115,6 +116,12 @@ Use explicit languages for scripts or AI agents:
 flkit add feature notifications --languages=en,fr
 ```
 
+Skip Slang generation if you want to run it yourself later:
+
+```sh
+flkit add feature notifications --no-run-slang
+```
+
 ## Generated Project
 
 After generation, FLKit runs:
@@ -174,6 +181,16 @@ lib/core/env/env.dart
 ```
 
 FLKit also adds `.env` patterns to the generated `.gitignore`.
+
+Generated projects include:
+
+```txt
+AGENTS.md
+flkit.yaml
+```
+
+`AGENTS.md` gives AI agents and contributors project instructions. `flkit.yaml`
+records the generated stack, architecture, tools, locales, and conventions.
 
 ## Roadmap
 

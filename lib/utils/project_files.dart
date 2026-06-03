@@ -14,6 +14,9 @@ String? readPackageName(File pubspec) {
 }
 
 List<String> detectTranslationLanguages(Directory projectDirectory) {
+  final manifestLanguages = readFlkitManifestLanguages(projectDirectory);
+  if (manifestLanguages.isNotEmpty) return manifestLanguages;
+
   final libDirectory = Directory(p.join(projectDirectory.path, 'lib'));
   if (!libDirectory.existsSync()) return const [];
 
@@ -29,4 +32,31 @@ List<String> detectTranslationLanguages(Directory projectDirectory) {
   }
 
   return languages.toList()..sort();
+}
+
+List<String> readFlkitManifestLanguages(Directory projectDirectory) {
+  final manifest = File(p.join(projectDirectory.path, 'flkit.yaml'));
+  if (!manifest.existsSync()) return const [];
+
+  final yaml = _tryLoadYaml(manifest);
+  if (yaml is! YamlMap) return const [];
+
+  final flkit = yaml['flkit'];
+  if (flkit is! YamlMap) return const [];
+
+  final locales = flkit['locales'];
+  if (locales is! YamlMap) return const [];
+
+  final supported = locales['supported'];
+  if (supported is! YamlList) return const [];
+
+  return supported.whereType<String>().toList()..sort();
+}
+
+YamlNode? _tryLoadYaml(File file) {
+  try {
+    return loadYamlNode(file.readAsStringSync());
+  } on Object {
+    return null;
+  }
 }

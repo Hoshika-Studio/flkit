@@ -5,6 +5,7 @@
   and i18n files.
 - Add language detection and `--languages` for feature generation.
 - Add optional Slang generation after adding a feature.
+- Add `AGENTS.md` and `flkit.yaml` to generated starter projects.
 
 ## 0.1.0
 
