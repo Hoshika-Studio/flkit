@@ -4,7 +4,10 @@ import 'package:args/command_runner.dart';
 import 'package:hoshika_flkit/create/starter_config.dart';
 import 'package:hoshika_flkit/create/starter_language.dart';
 import 'package:hoshika_flkit/create/starter_platform.dart';
+import 'package:hoshika_flkit/create/starter_project_files.dart';
 import 'package:hoshika_flkit/templates/template_locator.dart';
+import 'package:hoshika_flkit/utils/cli_process_runner.dart';
+import 'package:hoshika_flkit/utils/string_case_extensions.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 
@@ -33,6 +36,7 @@ class CreateCommand extends Command<void> {
   String get description => 'Create a new Flutter project.';
 
   final Logger _logger = Logger();
+  CliProcessRunner get _processRunner => CliProcessRunner(_logger);
 
   @override
   Future<void> run() async {
@@ -56,7 +60,7 @@ class CreateCommand extends Command<void> {
           )
         : _promptCustomConfig();
 
-    final created = await _runStep(
+    final created = await _processRunner.run(
       message: 'Creating Flutter project',
       executable: 'flutter',
       arguments: [
@@ -83,21 +87,21 @@ class CreateCommand extends Command<void> {
       DirectoryGeneratorTarget(Directory(appName)),
       vars: {
         'package_name': packageName,
-        'display_name': _toDisplayName(packageName),
+        'display_name': packageName.toDisplayName(),
         'use_riverpod': config.useRiverpod,
         'use_dio': config.useDio,
         'base_locale': StarterLanguage.en.code,
       },
     );
 
-    _removeUnselectedTranslations(
+    removeUnselectedTranslations(
       projectDirectory: Directory(appName),
       selectedLanguages: languages,
     );
-    _ensureEnvironmentFiles(Directory(appName));
-    _ensureEnvFilesAreIgnored(Directory(appName));
+    ensureEnvironmentFiles(Directory(appName));
+    ensureEnvFilesAreIgnored(Directory(appName));
 
-    final dependenciesInstalled = await _runStep(
+    final dependenciesInstalled = await _processRunner.run(
       message: 'Installing starter dependencies',
       executable: 'flutter',
       arguments: ['pub', 'get'],
@@ -108,7 +112,7 @@ class CreateCommand extends Command<void> {
 
     if (!dependenciesInstalled) return;
 
-    final translationsGenerated = await _runStep(
+    final translationsGenerated = await _processRunner.run(
       message: 'Generating translations',
       executable: 'dart',
       arguments: ['run', 'slang'],
@@ -206,117 +210,9 @@ class CreateCommand extends Command<void> {
     return normalized;
   }
 
-  void _removeUnselectedTranslations({
-    required Directory projectDirectory,
-    required List<StarterLanguage> selectedLanguages,
-  }) {
-    final selectedCodes = selectedLanguages.map((language) => language.code);
-    final i18nDirectory = Directory(p.join(projectDirectory.path, 'lib'));
-
-    if (!i18nDirectory.existsSync()) return;
-
-    for (final file in i18nDirectory.listSync(recursive: true)) {
-      if (file is! File || !file.path.endsWith('.i18n.json')) continue;
-
-      final fileName = p.basename(file.path);
-      final locale = RegExp(r'_([a-z]{2})\.i18n\.json$').firstMatch(fileName);
-
-      if (locale == null || selectedCodes.contains(locale.group(1))) {
-        continue;
-      }
-
-      file.deleteSync();
-    }
-  }
-
-  void _ensureEnvFilesAreIgnored(Directory projectDirectory) {
-    final gitignore = File(p.join(projectDirectory.path, '.gitignore'));
-    const entries = ['.env', '.env.*', '!.env.example'];
-
-    if (!gitignore.existsSync()) {
-      gitignore.writeAsStringSync('${entries.join('\n')}\n');
-      return;
-    }
-
-    final content = gitignore.readAsStringSync();
-    final missingEntries = entries.where(
-      (entry) => !RegExp(
-        '^${RegExp.escape(entry)}\$',
-        multiLine: true,
-      ).hasMatch(content),
-    );
-
-    if (missingEntries.isEmpty) return;
-
-    final buffer = StringBuffer(content);
-    if (content.isNotEmpty && !content.endsWith('\n')) {
-      buffer.writeln();
-    }
-
-    buffer.writeln();
-    buffer.writeln('# Environment');
-    for (final entry in missingEntries) {
-      buffer.writeln(entry);
-    }
-
-    gitignore.writeAsStringSync(buffer.toString());
-  }
-
-  void _ensureEnvironmentFiles(Directory projectDirectory) {
-    const defaultEnvironment = 'API_BASE_URL=https://api.example.com\n';
-
-    for (final fileName in ['.env', '.env.example']) {
-      final file = File(p.join(projectDirectory.path, fileName));
-
-      if (!file.existsSync()) {
-        file.writeAsStringSync(defaultEnvironment);
-      }
-    }
-  }
-
   String _toPackageName(String appName) {
-    final packageName = p
-        .basename(appName)
-        .trim()
-        .toLowerCase()
-        .replaceAll(RegExp(r'[^a-z0-9_]+'), '_')
-        .replaceAll(RegExp(r'_+'), '_')
-        .replaceAll(RegExp(r'^_+|_+$'), '');
+    final packageName = p.basename(appName).toSnakeCase();
 
     return packageName.isEmpty ? 'sample_app' : packageName;
-  }
-
-  String _toDisplayName(String packageName) {
-    return packageName
-        .split('_')
-        .where((part) => part.isNotEmpty)
-        .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
-        .join(' ');
-  }
-
-  Future<bool> _runStep({
-    required String message,
-    required String executable,
-    required List<String> arguments,
-    required String failureMessage,
-    required String successMessage,
-    String? workingDirectory,
-  }) async {
-    final progress = _logger.progress(message);
-    final result = await Process.run(
-      executable,
-      arguments,
-      workingDirectory: workingDirectory,
-      runInShell: true,
-    );
-
-    if (result.exitCode != 0) {
-      progress.fail(failureMessage);
-      _logger.err(result.stderr.toString());
-      return false;
-    }
-
-    progress.complete(successMessage);
-    return true;
   }
 }
